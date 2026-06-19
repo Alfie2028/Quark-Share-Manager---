@@ -1,0 +1,27 @@
+# 夸克网盘分享码管理系统 — 配置模板
+# 复制为 settings.yaml 并填入真实值
+
+# 夸克网盘 Cookie（浏览器登录后提取）
+quark_cookie: ""
+
+# 管理员
+admin:
+  username: admin
+  password: admin123
+
+# JWT 密钥（随机字符串）
+jwt_secret: "change-me-to-a-random-string"
+
+# 分享设置
+share:
+  expire_days: 1           # 有效期（天），免费用户仅支持1天
+  visitor_limit: 1         # 访问人数限制
+  daily_limit: 0
+
+# PushPlus 微信通知（可选）
+pushplus_token: ""
+
+# 服务器
+server:
+  host: "0.0.0.0"
+  port: 8000
