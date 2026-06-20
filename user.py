@@ -1,6 +1,6 @@
 """用户端 API — 注册、登录、浏览资料、下单、获取分享码"""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -49,7 +49,7 @@ def create_token(user_id: int, username: str, level: str = "normal") -> str:
         "user_id": user_id,
         "username": username,
         "level": level,
-        "exp": datetime.utcnow() + timedelta(days=7),
+        "exp": datetime.now(timezone(timedelta(hours=8))) + timedelta(days=7),
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 

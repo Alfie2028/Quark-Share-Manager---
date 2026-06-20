@@ -1,11 +1,17 @@
 """数据模型定义 — SQLAlchemy + SQLite"""
 
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import declarative_base, sessionmaker
 import enum
 
 Base = declarative_base()
+
+# 北京时间
+BEIJING_TZ = timezone(timedelta(hours=8))
+
+def beijing_now():
+    return datetime.now(BEIJING_TZ).replace(tzinfo=None)
 
 
 class UserLevel(str, enum.Enum):
@@ -31,7 +37,7 @@ class Material(Base):
     quark_folder_id = Column(String(100), nullable=False, comment="夸克网盘文件夹ID")
     price = Column(Float, nullable=False, default=0.0, comment="单价（元），0=免费")
     is_active = Column(Boolean, default=True, comment="是否上架")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=beijing_now)
 
 
 class User(Base):
@@ -43,7 +49,7 @@ class User(Base):
     password_hash = Column(String(200), nullable=False)
     level = Column(String(20), nullable=False, default=UserLevel.NORMAL.value, comment="admin/vip/normal")
     wechat_id = Column(String(100), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=beijing_now)
 
 
 class Order(Base):
@@ -55,7 +61,7 @@ class Order(Base):
     material_id = Column(Integer, ForeignKey("materials.id"), nullable=False)
     price = Column(Float, nullable=False, comment="购买时单价")
     status = Column(String(20), nullable=False, default=OrderStatus.PENDING.value, comment="pending/paid/cancelled")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=beijing_now)
 
 
 class ShareLog(Base):
@@ -67,7 +73,7 @@ class ShareLog(Base):
     material_id = Column(Integer, ForeignKey("materials.id"), nullable=False)
     share_url = Column(String(500), nullable=False, comment="夸克分享链接")
     password = Column(String(20), nullable=True, comment="提取码")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=beijing_now)
 
 
 # ── 数据库初始化 ──
